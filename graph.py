@@ -10,15 +10,20 @@ pyplot.rcParams['savefig.dpi'] = 100
 from pathlib import Path
 import os
 
-def plot_graph(times, measurements, title:str, show:bool=False, path_save:str|None=None, figure_name:str|None=None):
+def plot_graph(
+        times,
+        measurements,
+        title:str,
+        show:bool=False,
+        path_save:str|None=None,
+        figure_name:str|None=None,
+        legend=True
+    ):
     fig, ax1 = pyplot.subplots(layout='constrained')
     ax1.set_facecolor((0.95, 0.9, 0.85, 1))
     ax2 = ax1.twinx()
 
     # adjust the start time to 0 and change from ms to seconds
-    times = numpy.array(times)
-    times = times - min(times)
-    times /= 1000000
     ax1.axvspan(min(times), max(times), facecolor=(0.95, 0.9, 0.85, 1), alpha=0.5)
 
     # plot the power consumed line
@@ -75,7 +80,7 @@ def plot_graph(times, measurements, title:str, show:bool=False, path_save:str|No
     ax2.set_facecolor("none")
     ax2.set_ylabel(f"Energia Acumulada (J)", color="blue")
     ax2.tick_params("y", colors="blue")
-    
+    print("Total power:", power[-1], "W")
 
 
     # joins both plots together
@@ -84,7 +89,7 @@ def plot_graph(times, measurements, title:str, show:bool=False, path_save:str|No
     all_handles = handles1 + handles2
     all_labels = labels1   + labels2
 
-    ax1.legend(all_handles, all_labels, bbox_to_anchor=(1.05, 1.0), loc='upper left', fontsize=40)
+    if (legend): ax1.legend(all_handles, all_labels, bbox_to_anchor=(1.05, 1.0), loc='upper left', fontsize=40)
     ax1.set_title(title, fontsize=50)
     
     if path_save:
